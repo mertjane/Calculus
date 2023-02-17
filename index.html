@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" type="image/png" href="calc_icon.png">
+    <title>Calculus</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="input-wrapper">
+            <input type="text" id="result" placeholder="0">
+        </div>
+        <div class="top-row">
+            <button onclick="buttonPressed('AC')">AC</button>
+            <button onclick="buttonPressed('+/-')">+/-</button>
+            <button onclick="buttonPressed('%')">&percnt;</button>
+            <button onclick="buttonPressed('÷')">&#247;</button>
+        </div>
+        <div class="mid-row">
+            <button onclick="buttonPressed('7')">7</button>
+            <button onclick="buttonPressed('8')">8</button>
+            <button onclick="buttonPressed('9')">9</button>
+            <button onclick="buttonPressed('x')">&times;</button>
+        </div>
+        <div class="low-row">
+            <button onclick="buttonPressed('4')">4</button>
+            <button onclick="buttonPressed('5')">5</button>
+            <button onclick="buttonPressed('6')">6</button>
+            <button onclick="buttonPressed('-')">&minus;</button>
+        </div>
+        <div class="last-row">
+            <button onclick="buttonPressed('1')">1</button>
+            <button onclick="buttonPressed('2')">2</button>
+            <button onclick="buttonPressed('3')">3</button>
+            <button onclick="buttonPressed('+')">&plus;</button>
+        </div>
+        <div class="footer-row">
+            <button onclick="buttonPressed('0')">0</button>
+            <button onclick="buttonPressed('.')">.</button>
+            <button onclick="calculate()">&equals;</button>
+        </div>
+    </div>
+    <script>
+        // Get the HTML elements we need
+        const result = document.getElementById('result');
+
+        // Add an event listener for keyboard input
+        document.addEventListener('keydown', e => {
+            const key = e.key;
+            // Check if the pressed key is a number or an operator
+            if (!isNaN(key) || '+-*/.%'.indexOf(key) !== -1) {
+                buttonPressed(key);
+                e.preventDefault(); // Prevent the keypress event from firing
+            } else if (key === 'Enter') {
+                calculate();
+            } else if (key === 'Backspace') {
+                buttonPressed('AC');
+            }
+        });
+
+        // Define a variable to store the current calculation
+        let currentCalculation = '';
+
+        // Define a function to handle button presses
+        function buttonPressed(value) {
+            if (value === 'AC') {
+                // Clear the current calculation if 'AC' is pressed
+                currentCalculation = '';
+                result.value = '0';
+            } else if (value === '+/-') {
+                // Negate the current value if '+/-' is pressed
+                const currentValue = parseFloat(result.value);
+                result.value = (-currentValue).toString();
+                currentCalculation = result.value;
+            } else if (value === '%') {
+                // Calculate the percentage of the current value if '%' is pressed
+                const currentValue = parseFloat(result.value);
+                result.value = (currentValue / 100).toString();
+                currentCalculation = result.value;
+            } else if (value === 'x') {
+                // Replace 'x' with '*' for multiplication
+                currentCalculation += '*';
+                result.value = 'x';
+            } else {
+                // Add the pressed value to the current calculation
+                currentCalculation += value;
+                result.value = currentCalculation;
+            }
+        }
+
+        // Define a function to perform the calculation
+        function calculate() {
+            // Replace 'x' and '÷' with '*' and '/' for multiplication and division
+            currentCalculation = currentCalculation.replace(/x/g, '*').replace(/÷/g, '/');
+            // Evaluate the current calculation and display the result
+            const resultValue = eval(currentCalculation);
+            result.value = resultValue.toString();
+            currentCalculation = result.value;
+        }
+    </script>
+</body>
+
+</html>
